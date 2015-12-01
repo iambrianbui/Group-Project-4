@@ -1,0 +1,371 @@
+/*
+Stuff to do:
+Make sure inputs can only be numbers for the menu
+Create 1-2 more functions..?
+Clean up and improve
+*/
+
+#include <iostream>
+#include <string>
+#include <fstream>        // Needed to use 
+#include<ctime>
+#include<cstdlib>
+#include <stdio.h>
+using namespace std;
+
+void displayMenu();
+void getChoice();
+void registration();
+void login();
+void createMonster();
+void arena();
+void adminBuild();
+void playerBuild();
+
+bool check = false;
+int menu;  //  Menu input
+const int min = 1, max = 7;  //  Check if the menu input is good
+
+//  Int main for other programs
+int main()
+{
+	do
+	{
+		displayMenu();
+		if (menu == 1)
+		{
+			registration();
+		}
+		if (menu == 2)
+		{
+			login();
+		}
+		if (menu == 3)
+		{
+			createMonster();
+		}
+		if (menu == 4)
+		{
+			arena();
+		}
+		if (menu == 5)
+		{
+			playerBuild();
+		}
+		if (menu == 6)
+		{
+			adminBuild();
+		}
+	} while (menu != 7);
+
+	cout << "Goodbye!" << endl;
+	return 0;
+}
+
+//  Menu
+void displayMenu()
+{
+
+	string stars = "********************";
+
+	cout << stars << stars << endl;
+	cout << "Hello user!  What would you like to do?" << endl;
+	cout << stars << stars << endl;
+	cout << stars << stars << endl;
+	cout << "1...Register" << endl
+		<< "2...Login" << endl
+		<< "3...Create a Monster" << endl
+		<< "4...Enter the arena" << endl
+		<< "5...See player log" << endl
+		<< "6...See masterlog" << endl
+		<< "7...Exit the program" << endl;
+	cout << stars << stars << endl;
+	cin >> menu;
+	getChoice();
+}
+
+// Check input for the menu
+void getChoice()
+{
+	while (menu < min || menu > max)
+	{
+		cout << "Invalid input." << endl;
+		cin >> menu;
+	}
+}
+
+//  Registration prompt
+void registration()
+{
+	ofstream outputFile;
+	string username, password;
+	int admin;
+
+	// Register a username
+	{
+		do
+		{
+		cout << "Please enter your username." << endl;
+		cout << "Username: ";
+		cin >> username;
+		cout << endl;
+		if (username.length() < 6)
+		{
+			cout << "Username length must be at least 6 characters long." << endl;
+		}
+		} while (username.length() < 6);
+	//  Check if the user is an admin or a player.
+
+		do
+		{
+			cout << "Are you a player, or an administrator?" << endl;
+			cout << "1...I am a player." << endl;
+			cout << "2...I am an administrator" << endl;
+			cin >> admin;
+			switch (admin)
+			{
+			case 1:
+			{
+				username += "_player.txt";
+				check = true;
+				break;
+			}
+			case 2:
+			{
+				username += "_admin.txt";
+				check = true;
+				break;
+			}
+			default:
+				cout << "Response not recognized." << endl;
+			}
+		} while (check != true);
+
+
+		outputFile.open(username.c_str());  //  create a file for the new user.
+	}
+//  Create password.
+	do
+	{
+		cout << "Password: ";
+		cin >> password;
+		if (password.length() < 6)
+		{
+			cout << "password length must be at least 6 characters long." << endl;
+		}
+	} while (password.length() < 6);
+	
+		// write the names to the file
+		outputFile << password << endl;
+
+	// close the file
+	outputFile.close();
+
+	cout << "registration complete!" << endl;
+
+	cout << string(50, '\n');
+}
+
+//  Login prompt
+void login()
+{
+		string username, password, info;
+		int admin;
+
+		// Get the filename from the user
+		cin.ignore();
+		cout << "Please enter your username:  ";
+		cin >> username;
+
+		//  Ask if the user is an administrator.
+		do
+		{
+	
+			cout << "Are you an admin?" << endl;
+			cout << "1...No, I am not an admin." << endl;
+			cout << "2...Yes, I am an admin." << endl;
+			cin >> admin;
+			switch (admin)
+			{
+			case 1:
+			{
+				username += "_player.txt";
+				// Open the input file
+				ifstream inputFile(username.c_str());
+
+				// If the file successfully opened, process it
+				if (inputFile)
+				{
+					// Prompt user for password
+					cout << "Please enter your password:  ";
+					cin >> password;
+					// Read password
+					string strInput;
+					getline(inputFile, strInput);
+					if (password == strInput)
+					{
+						cout << string(50, '\n');
+						cout << "Hello, " << username << "!" << endl;
+						cout << "Welcome back!" << endl;
+						check = true;
+						break;
+					}
+					else
+						cout << string(50, '\n');
+						cout << "Wrong password." << endl;
+					// Close the file.
+					inputFile.close();
+					check = true;
+					break;
+				}
+				else
+				{
+					cout << string(50, '\n');
+					// Display an error message
+					cout << "Username not recognized." << endl;
+				}
+			}
+			case 2:
+			{
+				username += "_admin.txt";
+				// Open the input file
+				ifstream inputFile(username.c_str());
+
+				// If the file successfully opened, process it
+				if (inputFile)
+				{
+					// Prompt user for password
+					cout << "Please enter your password:  ";
+					cin >> password;
+					// Read password
+					string strInput;
+					getline(inputFile, strInput);
+					if (password == strInput)
+					{
+						cout << string(50, '\n');
+						cout << "Hello, " << username << "!" << endl;
+						cout << "Welcome back!" << endl;
+						check = true;
+						break;
+					}
+					else
+						cout << string(50, '\n');
+						cout << "Wrong password." << endl;
+
+					// Close the file.
+					inputFile.close();
+					check = true;
+					break;
+				}
+				else
+				{
+					// Display an error message
+					cout << string(50, '\n');
+					cout << "Username not recognized." << endl;
+				}
+			}
+			default:
+				cout << "Response not recognized." << endl;
+			}
+		} while (check != true);
+
+
+}
+
+void createMonster()
+{
+	cout << "3";
+}
+
+void arena()
+{
+	cout << "4";
+}
+
+
+//  Access the playerlog
+void playerBuild()
+{
+	ifstream inputFile;
+	string filename2, playerText2;
+	int number;
+	cin.ignore();
+
+	// Get the filename from the user
+	cout << "Enter the user you wish to see: ";
+	cin >> filename2;
+
+	// Open the input file
+	filename2 += "_player.txt";
+	inputFile.open(filename2.c_str());
+
+	// If the file successfully opened, process it
+	if (inputFile)
+	{
+		// Read the numbers from the file and display them
+		while (getline(inputFile, playerText2))
+		{
+			while (!inputFile.eof())
+			{
+				getline(inputFile, playerText2);
+				cout << playerText2 << endl;
+			}
+		}
+		inputFile.close();
+		system("pause");
+	}
+	else
+	{
+		// Display an error message
+		cout << "Player could not be found!" << endl;
+		system("pause");
+	}
+	cout << string(50, '\n');
+
+}
+
+//  LOAD MY MASTERLOG FAM ============================================================
+void adminBuild()
+{
+	ifstream file;
+	string text, adminCheck, password, strInput;
+	cin.ignore();
+
+	cout << "Please enter your username, admin." << endl;
+	cin >> adminCheck;
+	adminCheck += "_admin.txt";
+	ifstream inputFile2(adminCheck.c_str());
+
+	if (!inputFile2)
+	{
+		cout << string(50, '\n');
+		cout << "Admin account not recognized..." << endl;
+	}
+	else
+	{
+		// Prompt user for password
+		cout << "Please enter your password:  ";
+		cin >> password;
+		// Read password
+		getline(inputFile2, strInput);
+		if (password == strInput)
+		{
+			inputFile2.close();
+			inputFile2.clear();
+			//open the input file
+			file.open("data.txt");
+
+			//if file is not empty, read line by line
+			while (getline(file, text))
+			{
+				cout << text << endl;
+			}
+			file.close();
+			system("pause");
+			cout << string(50, '\n');
+		}
+		else
+			cout << "Incorrect password!" << endl;
+		inputFile2.close();
+	}
+}
