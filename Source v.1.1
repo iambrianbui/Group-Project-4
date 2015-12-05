@@ -1,8 +1,9 @@
 /*
-Stuff to do:
-Make sure inputs can only be numbers for the menu
-Create 1-2 more functions..?
-Clean up and improve
+Group Project 4
+Fantasy Final I
+by Brian Bui, Randy Le, Elizabeth Li
+Due:  5 December 2015
+See read me.
 */
 
 #define _CRT_SECURE_NO_DEPRECATE  //  NEEDED FOR CTIME RNG
@@ -22,10 +23,11 @@ void createMonster();
 void arena();
 void adminBuild();
 void playerBuild();
+void monsterReg();
 
 bool check = false;
 int menu;  //  Menu input
-const int min = 1, max = 7;  //  Check if the menu input is good
+const int min = 1, max = 8;  //  Check if the menu input is good
 
 //  Int main for other programs
 int main()
@@ -57,7 +59,11 @@ int main()
 		{
 			adminBuild();
 		}
-	} while (menu != 7);
+		if (menu == 7)
+		{
+			monsterReg();
+		}
+	} while (menu != 8);
 
 	cout << "Goodbye!" << endl;
 	return 0;
@@ -79,7 +85,8 @@ void displayMenu()
 		<< "4...Enter the arena" << endl
 		<< "5...See player log" << endl
 		<< "6...See masterlog" << endl
-		<< "7...Exit the program" << endl;
+		<< "7...See the Monster Registry" << endl
+		<< "8...Exit the program" << endl;
 	cout << stars << stars << endl;
 	cin >> menu;
 	getChoice();
@@ -618,4 +625,62 @@ void adminBuild()
 			cout << "Incorrect password!" << endl;
 		inputFile2.close();
 	}
+}
+
+//  Pull up monster registry
+void monsterReg()
+{
+	ifstream inputFile;
+	string filename3, playerText3;
+	int number;
+	cin.ignore();
+
+	// Get the filename from the user
+	cout << "Enter the monster you want to see: " << endl;
+	cin >> filename3;
+
+	// Open the input file
+	inputFile.open(filename3.c_str());
+
+	// If the file successfully opened, process it
+	if (inputFile)
+	{
+		// Read the numbers from the file and display them
+		while (getline(inputFile, playerText3))
+		{
+			cout << "The monster " << filename3 << " has 100 HP." << endl
+				<< "A base damage of " << playerText3 << "." << endl << endl;
+			int damage = atoi(playerText3.c_str());
+			if (damage <= 5)
+			{
+				cout << "According to our database, this monster is pretty weak.." << endl;
+			}
+			else if (damage > 5 && damage <= 10)
+			{
+				cout << "It appears that this monster is below average..." << endl;
+			}
+			else if (damage > 10 && damage <= 15)
+			{
+				cout << "It appears that this monster is average!" << endl;
+			}
+			else if (damage > 15 && damage <= 20)
+			{
+				cout << "It appears that this monster is strong, be careful!" << endl;
+			}
+			else if (damage > 20)
+			{
+				cout << "This monster is extremely powerful!!!" << endl;
+			}
+		}
+		inputFile.close();
+		system("pause");
+	}
+	else
+	{
+		// Display an error message
+		cout << "Monster could not be found!  Maybe we can catch one..." << endl;
+		system("pause");
+	}
+	cout << string(50, '\n');
+
 }
