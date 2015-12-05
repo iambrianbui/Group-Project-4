@@ -1,9 +1,8 @@
 /*
-Group Project 4
-Fantasy Final I
-by Brian Bui, Randy Le, Elizabeth Li
-Due:  5 December 2015
-See read me.
+Stuff to do:
+Make sure inputs can only be numbers for the menu
+Create 1-2 more functions..?
+Clean up and improve
 */
 
 #define _CRT_SECURE_NO_DEPRECATE  //  NEEDED FOR CTIME RNG
@@ -97,6 +96,11 @@ void getChoice()
 {
 	while (menu < min || menu > max)
 	{
+		while (cin.fail())
+		{
+			cin.clear();
+			cin.ignore();
+		}
 		cout << "Invalid input." << endl;
 		cin >> menu;
 	}
